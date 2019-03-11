@@ -8,6 +8,9 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 @Mapper
 public interface CoffeeMapper {
@@ -24,4 +27,11 @@ public interface CoffeeMapper {
             // @Result(column = "update_time", property = "updateTime"),
     })
     Coffee findById(@Param("id") Long id);
+
+    @Select("select * from t_coffee order by id")
+    List<Coffee> findAllWithRowBounds(RowBounds rowBounds);
+
+    @Select("select * from t_coffee order by id")
+    List<Coffee> findAllWithParam(@Param("pageNum") int pageNum,
+                                  @Param("pageSize") int pageSize);
 }
