@@ -27,6 +27,7 @@ public class MybatisGeneratorApplication implements ApplicationRunner {
     private CoffeeMapper coffeeMapper;
 
     public static void main(String[] args) {
+        log.info("MybatisGeneratorApplication: 11111111111111111111111111");
         SpringApplication.run(MybatisGeneratorApplication.class, args);
     }
 
