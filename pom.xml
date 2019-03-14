@@ -121,6 +121,13 @@
 			<artifactId>reactor-core</artifactId>
 		</dependency>
 
+		<!-- 监控数据库操作 -->
+		<dependency>
+			<groupId>p6spy</groupId>
+			<artifactId>p6spy</artifactId>
+			<version>3.8.1</version>
+		</dependency>
+
         <!--Test-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
