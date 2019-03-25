@@ -1,5 +1,6 @@
 package com.example.springbucks.waiter.controller;
 
+import com.example.springbucks.waiter.controller.exception.FormValidationException;
 import com.example.springbucks.waiter.controller.request.NewCoffeeRequest;
 import com.example.springbucks.waiter.model.Coffee;
 import com.example.springbucks.waiter.service.CoffeeService;
@@ -12,10 +13,12 @@ import org.joda.money.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,14 +33,26 @@ public class CoffeeController {
     private CoffeeService coffeeService;
 
     @PostMapping(path="/", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public Coffee addCoffeeWithoutBindingResult(@Valid NewCoffeeRequest newCoffee) {
+    public Coffee addCoffeeWithoutBindingResult(@Valid NewCoffeeRequest newCoffee,
+                                                BindingResult result) {
+        if (result.hasErrors()) {
+            log.warn("Binding Errors: {}", result);
+            throw new FormValidationException(result);
+        }
         return coffeeService.saveCoffee(newCoffee.getName(), newCoffee.getPrice());
     }
 
     @PostMapping(path = "/", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public Coffee addJsonCoffeeWithoutBindingResult(@Valid @RequestBody NewCoffeeRequest newCoffee) {
+    public Coffee addJsonCoffeeWithoutBindingResult(@Valid @RequestBody NewCoffeeRequest newCoffee,
+                                                    BindingResult result) {
+        if (result.hasErrors()) {
+            log.warn("Binding Errors: {}", result);
+            throw new ValidationException(result.toString());
+        }
         return coffeeService.saveCoffee(newCoffee.getName(), newCoffee.getPrice());
     }
 
