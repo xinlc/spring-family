@@ -43,4 +43,30 @@ public class CoffeeOrderController {
         return orderService.createOrder(newOrder.getCustomer(), coffeeList);
     }
 
+
+    @ModelAttribute
+    public List<Coffee> coffeeList() {
+        return coffeeService.getAllCoffee();
+    }
+
+    @GetMapping(path = "/")
+    public ModelAndView showCreateForm() {
+        return new ModelAndView("create-order-form");
+    }
+
+    @PostMapping(path = "/", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String createOrder(@Valid NewOrderRequest newOrder,
+                              BindingResult result, ModelMap map) {
+        if (result.hasErrors()) {
+            log.warn("Binding Result: {}", result);
+            map.addAttribute("message", result.toString());
+            return "create-order-form";
+        }
+
+        log.info("Receive new Order {}", newOrder);
+        Coffee[] coffeeList = coffeeService.getCoffeeByName(newOrder.getItems())
+                .toArray(new Coffee[] {});
+        CoffeeOrder order = orderService.createOrder(newOrder.getCustomer(), coffeeList);
+        return "redirect:/order/" + order.getId();
+    }
 }
