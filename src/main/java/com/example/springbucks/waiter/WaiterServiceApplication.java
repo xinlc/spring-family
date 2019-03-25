@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.Arrays;
 import java.util.TimeZone;
 
 
@@ -20,7 +21,22 @@ import java.util.TimeZone;
 public class WaiterServiceApplication implements WebMvcConfigurer {
 
     public static void main(String[] args) {
+
         SpringApplication.run(WaiterServiceApplication.class, args);
+        streamDemo();
+    }
+
+    public static void streamDemo() {
+        Arrays.asList("Foo", "Bar").stream()
+                .filter(s -> s.equalsIgnoreCase("foo"))
+                .map(s -> s.toUpperCase())
+                .forEach(System.out::println);
+
+        Arrays.stream(new String[] { "s1", "s2", "s3" })
+                .map(s -> Arrays.asList(s))
+                .flatMap(l -> l.stream())
+                .forEach(System.out::println);
+
     }
 
     @Override
